@@ -3,7 +3,7 @@ cask "agent-memory-mcp" do
   name "agent-memory-mcp"
   desc "MCP server with persistent agent memory and RAG semantic search"
   homepage "https://github.com/ipiton/agent-memory-mcp"
-  version "0.4.0"
+  version "0.4.1"
 
   livecheck do
     skip "Auto-generated on release."
@@ -14,22 +14,22 @@ cask "agent-memory-mcp" do
   on_macos do
     on_intel do
       url "https://github.com/ipiton/agent-memory-mcp/releases/download/v#{version}/agent-memory-mcp-#{version}-darwin-amd64.tar.gz"
-      sha256 "5419ce0ee8834f74e4445857eff98f2919ba836dbe2e349036edc460e54388e2"
+      sha256 "e796535a0da07a348de436b240f966353936fe9cf3c5eea8ab7ca538f1c4e683"
     end
     on_arm do
       url "https://github.com/ipiton/agent-memory-mcp/releases/download/v#{version}/agent-memory-mcp-#{version}-darwin-arm64.tar.gz"
-      sha256 "c8c132ee420e27c9d9c297590feb18995552e8ae2785f0e8359793c4e1c07ce5"
+      sha256 "703c7265276059ab4092f8b392d6bdf46741ae6fc63a3d93512b1da3dc5bcdca"
     end
   end
 
   on_linux do
     on_intel do
       url "https://github.com/ipiton/agent-memory-mcp/releases/download/v#{version}/agent-memory-mcp-#{version}-linux-amd64.tar.gz"
-      sha256 "bb66a99e2bf80b9bebf3be0d6af06854fea58b0eab57c5b88430ed0634a92733"
+      sha256 "dcb404e540ecd77b73718b13407c98c9b83f62c1bda9b50e168e824f841e7bb9"
     end
     on_arm do
       url "https://github.com/ipiton/agent-memory-mcp/releases/download/v#{version}/agent-memory-mcp-#{version}-linux-arm64.tar.gz"
-      sha256 "05407e135828c6d90df6c7a34465dbe1cb3c614ad3fb758b40dcaa9683efb49d"
+      sha256 "7ee8149ebaee8e9090157d5bac326ae98e41a16dc0067f299bad57bf14165275"
     end
   end
 
