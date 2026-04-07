@@ -5,21 +5,21 @@
 class AgentMemoryMcp < Formula
   desc "MCP server with persistent agent memory and RAG semantic search"
   homepage "https://github.com/ipiton/agent-memory-mcp"
-  version "0.6.2"
+  version "0.6.3"
   license "MIT"
 
   on_macos do
     if Hardware::CPU.intel?
-      url "https://github.com/ipiton/agent-memory-mcp/releases/download/v0.6.2/agent-memory-mcp-0.6.2-darwin-amd64.tar.gz"
-      sha256 "786b4ca99c09d6ca28cf9961b0abb9ed7846307dc9167a15ffbbaa30e2008d09"
+      url "https://github.com/ipiton/agent-memory-mcp/releases/download/v0.6.3/agent-memory-mcp-0.6.3-darwin-amd64.tar.gz"
+      sha256 "1b2cf852cd5c887ecb57e9ffdee567b413437659bb0aa6751250b952c30b974a"
 
       define_method(:install) do
         bin.install "agent-memory-mcp"
       end
     end
     if Hardware::CPU.arm?
-      url "https://github.com/ipiton/agent-memory-mcp/releases/download/v0.6.2/agent-memory-mcp-0.6.2-darwin-arm64.tar.gz"
-      sha256 "c8b6bef54e0fdd8e6a8185d639cd841abcacd73f4b36d2a172866d380bb62b88"
+      url "https://github.com/ipiton/agent-memory-mcp/releases/download/v0.6.3/agent-memory-mcp-0.6.3-darwin-arm64.tar.gz"
+      sha256 "61247c33b68fab63971f8b0c10b629a28bc63625bd2c907c465ac00c3d6454b8"
 
       define_method(:install) do
         bin.install "agent-memory-mcp"
@@ -29,15 +29,15 @@ class AgentMemoryMcp < Formula
 
   on_linux do
     if Hardware::CPU.intel? && Hardware::CPU.is_64_bit?
-      url "https://github.com/ipiton/agent-memory-mcp/releases/download/v0.6.2/agent-memory-mcp-0.6.2-linux-amd64.tar.gz"
-      sha256 "5a9212046fd008fda26e2d4badca980cb4767ae7adb2abf3f628d84ddbdaaccb"
+      url "https://github.com/ipiton/agent-memory-mcp/releases/download/v0.6.3/agent-memory-mcp-0.6.3-linux-amd64.tar.gz"
+      sha256 "92e01a79938b4ce20dfc0b83a76618e3c471c179de31ae9a95f77e02c9690a23"
       define_method(:install) do
         bin.install "agent-memory-mcp"
       end
     end
     if Hardware::CPU.arm? && Hardware::CPU.is_64_bit?
-      url "https://github.com/ipiton/agent-memory-mcp/releases/download/v0.6.2/agent-memory-mcp-0.6.2-linux-arm64.tar.gz"
-      sha256 "85267c026604efdfe6201e5db225259edbdb9193d3b89a47761397f690cb7160"
+      url "https://github.com/ipiton/agent-memory-mcp/releases/download/v0.6.3/agent-memory-mcp-0.6.3-linux-arm64.tar.gz"
+      sha256 "79cbbec4f5c3a05f9ff8615b61b1b5451b5db22e1c2c80175fd7418e9af18938"
       define_method(:install) do
         bin.install "agent-memory-mcp"
       end
@@ -82,28 +82,19 @@ class AgentMemoryMcp < Formula
     (var/"agent-memory-mcp/memory-store").mkpath
     (var/"agent-memory-mcp/rag-index").mkpath
     (var/"log/agent-memory-mcp").mkpath
-    system bin/"agent-memory-mcp", "setup", "--force"
   end
 
   def caveats
     <<~EOS
-      agent-memory-mcp is installed and Claude Code hooks are configured.
+      Run once to configure Claude Code auto-capture:
+        agent-memory-mcp setup
 
       To start the background service:
         brew services start agent-memory-mcp
 
-      What's automatic:
-        - SessionEnd: captures session knowledge
-        - PreCompact: saves checkpoint before context compression
-        - SessionStart: loads context + compiles pending summaries
-
       Config: #{etc}/agent-memory-mcp/config.env
-      Hooks:  ~/.claude/settings.json
       Data:   #{var}/agent-memory-mcp/
       Logs:   #{var}/log/agent-memory-mcp/
-
-      To reconfigure hooks: agent-memory-mcp setup
-      To enable RAG: set MCP_RAG_ENABLED=true in config.env
     EOS
   end
 
