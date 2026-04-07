@@ -82,24 +82,28 @@ class AgentMemoryMcp < Formula
     (var/"agent-memory-mcp/memory-store").mkpath
     (var/"agent-memory-mcp/rag-index").mkpath
     (var/"log/agent-memory-mcp").mkpath
+    system bin/"agent-memory-mcp", "setup"
   end
 
   def caveats
     <<~EOS
-      agent-memory-mcp is ready to run as a background service.
+      agent-memory-mcp is installed and Claude Code hooks are configured.
 
-      To start:
+      To start the background service:
         brew services start agent-memory-mcp
 
-      Config: #{etc}/agent-memory-mcp/config.env
-      Logs:   #{var}/log/agent-memory-mcp/
-      Data:   #{var}/agent-memory-mcp/
+      What's automatic:
+        - SessionEnd: captures session knowledge
+        - PreCompact: saves checkpoint before context compression
+        - SessionStart: loads context + compiles pending summaries
 
-      To enable RAG document search, edit config.env and set:
-        MCP_RAG_ENABLED=true
-        MCP_ROOT=/path/to/your/project
-        MCP_INDEX_DIRS=docs,README.md
-      Changes are picked up automatically within ~30 seconds.
+      Config: #{etc}/agent-memory-mcp/config.env
+      Hooks:  ~/.claude/settings.json
+      Data:   #{var}/agent-memory-mcp/
+      Logs:   #{var}/log/agent-memory-mcp/
+
+      To reconfigure hooks: agent-memory-mcp setup
+      To enable RAG: set MCP_RAG_ENABLED=true in config.env
     EOS
   end
 
