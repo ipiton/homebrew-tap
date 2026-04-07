@@ -5,21 +5,21 @@
 class AgentMemoryMcp < Formula
   desc "MCP server with persistent agent memory and RAG semantic search"
   homepage "https://github.com/ipiton/agent-memory-mcp"
-  version "0.6.1"
+  version "0.6.2"
   license "MIT"
 
   on_macos do
     if Hardware::CPU.intel?
-      url "https://github.com/ipiton/agent-memory-mcp/releases/download/v0.6.1/agent-memory-mcp-0.6.1-darwin-amd64.tar.gz"
-      sha256 "8c0ba9a5f86a4be8d5b14714ee1b0b276daf5228f28118dd6219914d3cb48697"
+      url "https://github.com/ipiton/agent-memory-mcp/releases/download/v0.6.2/agent-memory-mcp-0.6.2-darwin-amd64.tar.gz"
+      sha256 "786b4ca99c09d6ca28cf9961b0abb9ed7846307dc9167a15ffbbaa30e2008d09"
 
       define_method(:install) do
         bin.install "agent-memory-mcp"
       end
     end
     if Hardware::CPU.arm?
-      url "https://github.com/ipiton/agent-memory-mcp/releases/download/v0.6.1/agent-memory-mcp-0.6.1-darwin-arm64.tar.gz"
-      sha256 "b91744cb7e2ca14a6f7e81f29966dcf6a77d42ae0324a5645736de8390913b2a"
+      url "https://github.com/ipiton/agent-memory-mcp/releases/download/v0.6.2/agent-memory-mcp-0.6.2-darwin-arm64.tar.gz"
+      sha256 "c8b6bef54e0fdd8e6a8185d639cd841abcacd73f4b36d2a172866d380bb62b88"
 
       define_method(:install) do
         bin.install "agent-memory-mcp"
@@ -29,15 +29,15 @@ class AgentMemoryMcp < Formula
 
   on_linux do
     if Hardware::CPU.intel? && Hardware::CPU.is_64_bit?
-      url "https://github.com/ipiton/agent-memory-mcp/releases/download/v0.6.1/agent-memory-mcp-0.6.1-linux-amd64.tar.gz"
-      sha256 "e70cd0a0b897e1941a8f874cf7beaf87e35ecf343abdc83c37129548ba3c9d50"
+      url "https://github.com/ipiton/agent-memory-mcp/releases/download/v0.6.2/agent-memory-mcp-0.6.2-linux-amd64.tar.gz"
+      sha256 "5a9212046fd008fda26e2d4badca980cb4767ae7adb2abf3f628d84ddbdaaccb"
       define_method(:install) do
         bin.install "agent-memory-mcp"
       end
     end
     if Hardware::CPU.arm? && Hardware::CPU.is_64_bit?
-      url "https://github.com/ipiton/agent-memory-mcp/releases/download/v0.6.1/agent-memory-mcp-0.6.1-linux-arm64.tar.gz"
-      sha256 "165d44e8be17c022ec5ad2d0a50086356840001099f2dfcb96cc3154ceeb718f"
+      url "https://github.com/ipiton/agent-memory-mcp/releases/download/v0.6.2/agent-memory-mcp-0.6.2-linux-arm64.tar.gz"
+      sha256 "85267c026604efdfe6201e5db225259edbdb9193d3b89a47761397f690cb7160"
       define_method(:install) do
         bin.install "agent-memory-mcp"
       end
@@ -82,7 +82,7 @@ class AgentMemoryMcp < Formula
     (var/"agent-memory-mcp/memory-store").mkpath
     (var/"agent-memory-mcp/rag-index").mkpath
     (var/"log/agent-memory-mcp").mkpath
-    system bin/"agent-memory-mcp", "setup"
+    system bin/"agent-memory-mcp", "setup", "--force"
   end
 
   def caveats
