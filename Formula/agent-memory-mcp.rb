@@ -5,41 +5,145 @@
 class AgentMemoryMcp < Formula
   desc "MCP server with persistent agent memory and RAG semantic search"
   homepage "https://github.com/ipiton/agent-memory-mcp"
-  version "0.9.4"
+  version "0.10.0"
   license "MIT"
 
   on_macos do
     if Hardware::CPU.intel?
-      url "https://github.com/ipiton/agent-memory-mcp/releases/download/v0.9.4/agent-memory-mcp-0.9.4-darwin-amd64.tar.gz"
-      sha256 "e364e037199b96eb1aba67b35c8dc64ce57e6b1b1e62c5c24e2c97025b22218d"
+      url "https://github.com/ipiton/agent-memory-mcp/releases/download/v0.10.0/agent-memory-mcp-0.10.0-darwin-amd64.tar.gz"
+      sha256 "2515eca18bc65eac4d5084a3097960a5b3cce702226a990e1ff2da8348c7daa8"
 
       define_method(:install) do
         bin.install "agent-memory-mcp"
+        # T101: the service is launched through a wrapper so secrets can come
+        # from SOPS on machines that use it, without forcing sops on anyone
+        # else. No secrets file → the wrapper execs the binary directly, which
+        # is exactly what the service did before.
+        (libexec/"service-wrapper").write <<~SH
+          #!/bin/bash
+          set -euo pipefail
+
+          BIN="#{opt_bin}/agent-memory-mcp"
+          CONFIG="#{etc}/agent-memory-mcp/config.env"
+          SECRETS="#{etc}/agent-memory-mcp/secrets.sops.env"
+
+          if [ -f "$SECRETS" ] && command -v sops >/dev/null 2>&1; then
+            # launchd gives a minimal environment, so the age key has to be named
+            # explicitly — sops does not find it otherwise (verified 2026-08-14).
+            : "${SOPS_AGE_KEY_FILE:=$HOME/.config/sops/age/keys.txt}"
+            export SOPS_AGE_KEY_FILE
+            # --same-process makes sops exec the service in place instead of
+            # forking it. Without it launchd would supervise sops rather than the
+            # service, and `brew services stop` would change meaning.
+            exec sops exec-env --same-process "$SECRETS" "$BIN serve --config $CONFIG"
+          fi
+
+          exec "$BIN" serve --config "$CONFIG"
+        SH
+        chmod 0755, libexec/"service-wrapper"
       end
     end
     if Hardware::CPU.arm?
-      url "https://github.com/ipiton/agent-memory-mcp/releases/download/v0.9.4/agent-memory-mcp-0.9.4-darwin-arm64.tar.gz"
-      sha256 "8a774b192c9036063190d3e248d2e91a506834d70f81e24b37da4dbfd53fce2b"
+      url "https://github.com/ipiton/agent-memory-mcp/releases/download/v0.10.0/agent-memory-mcp-0.10.0-darwin-arm64.tar.gz"
+      sha256 "b4058d4ae16a2995cd468cca0b05fa67c249508e94e4e6c4cfcef1f759c0257f"
 
       define_method(:install) do
         bin.install "agent-memory-mcp"
+        # T101: the service is launched through a wrapper so secrets can come
+        # from SOPS on machines that use it, without forcing sops on anyone
+        # else. No secrets file → the wrapper execs the binary directly, which
+        # is exactly what the service did before.
+        (libexec/"service-wrapper").write <<~SH
+          #!/bin/bash
+          set -euo pipefail
+
+          BIN="#{opt_bin}/agent-memory-mcp"
+          CONFIG="#{etc}/agent-memory-mcp/config.env"
+          SECRETS="#{etc}/agent-memory-mcp/secrets.sops.env"
+
+          if [ -f "$SECRETS" ] && command -v sops >/dev/null 2>&1; then
+            # launchd gives a minimal environment, so the age key has to be named
+            # explicitly — sops does not find it otherwise (verified 2026-08-14).
+            : "${SOPS_AGE_KEY_FILE:=$HOME/.config/sops/age/keys.txt}"
+            export SOPS_AGE_KEY_FILE
+            # --same-process makes sops exec the service in place instead of
+            # forking it. Without it launchd would supervise sops rather than the
+            # service, and `brew services stop` would change meaning.
+            exec sops exec-env --same-process "$SECRETS" "$BIN serve --config $CONFIG"
+          fi
+
+          exec "$BIN" serve --config "$CONFIG"
+        SH
+        chmod 0755, libexec/"service-wrapper"
       end
     end
   end
 
   on_linux do
     if Hardware::CPU.intel? && Hardware::CPU.is_64_bit?
-      url "https://github.com/ipiton/agent-memory-mcp/releases/download/v0.9.4/agent-memory-mcp-0.9.4-linux-amd64.tar.gz"
-      sha256 "48ae4993594c3b98d376bfbb33f69c3237d3822a4059a75c156257b6074c8a0a"
+      url "https://github.com/ipiton/agent-memory-mcp/releases/download/v0.10.0/agent-memory-mcp-0.10.0-linux-amd64.tar.gz"
+      sha256 "f4a18629e44bce7d323f89f7e9c9d90164da48d849103632f40b30ffe6aed180"
       define_method(:install) do
         bin.install "agent-memory-mcp"
+        # T101: the service is launched through a wrapper so secrets can come
+        # from SOPS on machines that use it, without forcing sops on anyone
+        # else. No secrets file → the wrapper execs the binary directly, which
+        # is exactly what the service did before.
+        (libexec/"service-wrapper").write <<~SH
+          #!/bin/bash
+          set -euo pipefail
+
+          BIN="#{opt_bin}/agent-memory-mcp"
+          CONFIG="#{etc}/agent-memory-mcp/config.env"
+          SECRETS="#{etc}/agent-memory-mcp/secrets.sops.env"
+
+          if [ -f "$SECRETS" ] && command -v sops >/dev/null 2>&1; then
+            # launchd gives a minimal environment, so the age key has to be named
+            # explicitly — sops does not find it otherwise (verified 2026-08-14).
+            : "${SOPS_AGE_KEY_FILE:=$HOME/.config/sops/age/keys.txt}"
+            export SOPS_AGE_KEY_FILE
+            # --same-process makes sops exec the service in place instead of
+            # forking it. Without it launchd would supervise sops rather than the
+            # service, and `brew services stop` would change meaning.
+            exec sops exec-env --same-process "$SECRETS" "$BIN serve --config $CONFIG"
+          fi
+
+          exec "$BIN" serve --config "$CONFIG"
+        SH
+        chmod 0755, libexec/"service-wrapper"
       end
     end
     if Hardware::CPU.arm? && Hardware::CPU.is_64_bit?
-      url "https://github.com/ipiton/agent-memory-mcp/releases/download/v0.9.4/agent-memory-mcp-0.9.4-linux-arm64.tar.gz"
-      sha256 "06f60bd632dd5cc0fe0854b06bc9d112c08b600a10c5fff60a080b7e1eed4931"
+      url "https://github.com/ipiton/agent-memory-mcp/releases/download/v0.10.0/agent-memory-mcp-0.10.0-linux-arm64.tar.gz"
+      sha256 "0466e87f9bd9117b75c50d282ce890a854b72bbb56da44322b93a2fe5dd97f8c"
       define_method(:install) do
         bin.install "agent-memory-mcp"
+        # T101: the service is launched through a wrapper so secrets can come
+        # from SOPS on machines that use it, without forcing sops on anyone
+        # else. No secrets file → the wrapper execs the binary directly, which
+        # is exactly what the service did before.
+        (libexec/"service-wrapper").write <<~SH
+          #!/bin/bash
+          set -euo pipefail
+
+          BIN="#{opt_bin}/agent-memory-mcp"
+          CONFIG="#{etc}/agent-memory-mcp/config.env"
+          SECRETS="#{etc}/agent-memory-mcp/secrets.sops.env"
+
+          if [ -f "$SECRETS" ] && command -v sops >/dev/null 2>&1; then
+            # launchd gives a minimal environment, so the age key has to be named
+            # explicitly — sops does not find it otherwise (verified 2026-08-14).
+            : "${SOPS_AGE_KEY_FILE:=$HOME/.config/sops/age/keys.txt}"
+            export SOPS_AGE_KEY_FILE
+            # --same-process makes sops exec the service in place instead of
+            # forking it. Without it launchd would supervise sops rather than the
+            # service, and `brew services stop` would change meaning.
+            exec sops exec-env --same-process "$SECRETS" "$BIN serve --config $CONFIG"
+          fi
+
+          exec "$BIN" serve --config "$CONFIG"
+        SH
+        chmod 0755, libexec/"service-wrapper"
       end
     end
   end
@@ -99,7 +203,7 @@ class AgentMemoryMcp < Formula
   end
 
   service do
-    run [opt_bin/"agent-memory-mcp", "serve", "--config", etc/"agent-memory-mcp/config.env"]
+    run [opt_libexec/"service-wrapper"]
     keep_alive true
     log_path var/"log/agent-memory-mcp/service.log"
     error_log_path var/"log/agent-memory-mcp/service.err.log"
