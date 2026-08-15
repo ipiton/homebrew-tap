@@ -5,13 +5,13 @@
 class AgentMemoryMcp < Formula
   desc "MCP server with persistent agent memory and RAG semantic search"
   homepage "https://github.com/ipiton/agent-memory-mcp"
-  version "0.12.1"
+  version "0.13.0"
   license "MIT"
 
   on_macos do
     if Hardware::CPU.intel?
-      url "https://github.com/ipiton/agent-memory-mcp/releases/download/v0.12.1/agent-memory-mcp-0.12.1-darwin-amd64.tar.gz"
-      sha256 "5e210515fdbd325aecc149b3be519072ec50276547e7f96bd3c5484c62d99892"
+      url "https://github.com/ipiton/agent-memory-mcp/releases/download/v0.13.0/agent-memory-mcp-0.13.0-darwin-amd64.tar.gz"
+      sha256 "3802af5820fe71940cf7a128f1e5011d10dc381ce52e68825eabccdbb3eaa9d6"
 
       define_method(:install) do
         bin.install "agent-memory-mcp"
@@ -44,8 +44,8 @@ class AgentMemoryMcp < Formula
       end
     end
     if Hardware::CPU.arm?
-      url "https://github.com/ipiton/agent-memory-mcp/releases/download/v0.12.1/agent-memory-mcp-0.12.1-darwin-arm64.tar.gz"
-      sha256 "319ddfd61dc0091b2c63b52dfbbad7fb70aecfc288b920eea65c64535b31b5fd"
+      url "https://github.com/ipiton/agent-memory-mcp/releases/download/v0.13.0/agent-memory-mcp-0.13.0-darwin-arm64.tar.gz"
+      sha256 "36b5cd394e2a3f75f11c735783195b0d2f8a52582d4c38ce382f3f6219ba771f"
 
       define_method(:install) do
         bin.install "agent-memory-mcp"
@@ -81,8 +81,8 @@ class AgentMemoryMcp < Formula
 
   on_linux do
     if Hardware::CPU.intel? && Hardware::CPU.is_64_bit?
-      url "https://github.com/ipiton/agent-memory-mcp/releases/download/v0.12.1/agent-memory-mcp-0.12.1-linux-amd64.tar.gz"
-      sha256 "5a3bd39a937e62e31085ed6ecfd81bcf2fb4e1b0c07168e516de851647f7f461"
+      url "https://github.com/ipiton/agent-memory-mcp/releases/download/v0.13.0/agent-memory-mcp-0.13.0-linux-amd64.tar.gz"
+      sha256 "4947d440db99cb2dd24b5828eb4671ebc4c24767015abff0dbbcb87d6230d08b"
       define_method(:install) do
         bin.install "agent-memory-mcp"
         # T101: the service is launched through a wrapper so secrets can come
@@ -114,8 +114,8 @@ class AgentMemoryMcp < Formula
       end
     end
     if Hardware::CPU.arm? && Hardware::CPU.is_64_bit?
-      url "https://github.com/ipiton/agent-memory-mcp/releases/download/v0.12.1/agent-memory-mcp-0.12.1-linux-arm64.tar.gz"
-      sha256 "36058711634ce1a52aab16c066311ca338841054b62b51bb193b07c23d87aeeb"
+      url "https://github.com/ipiton/agent-memory-mcp/releases/download/v0.13.0/agent-memory-mcp-0.13.0-linux-arm64.tar.gz"
+      sha256 "23755d134ef3c1e3c5388607267f7abad0f528b9cef3996e4a4d42c6c871de4c"
       define_method(:install) do
         bin.install "agent-memory-mcp"
         # T101: the service is launched through a wrapper so secrets can come
