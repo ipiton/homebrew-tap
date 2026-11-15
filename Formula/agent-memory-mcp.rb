@@ -5,13 +5,13 @@
 class AgentMemoryMcp < Formula
   desc "MCP server with persistent agent memory and RAG semantic search"
   homepage "https://github.com/ipiton/agent-memory-mcp"
-  version "0.17.0"
+  version "0.18.0"
   license "MIT"
 
   on_macos do
     if Hardware::CPU.intel?
-      url "https://github.com/ipiton/agent-memory-mcp/releases/download/v0.17.0/agent-memory-mcp-0.17.0-darwin-amd64.tar.gz"
-      sha256 "6cc79025df498608f37c08e09fc0988a195c78d4357b5a676e58e7abf26090a3"
+      url "https://github.com/ipiton/agent-memory-mcp/releases/download/v0.18.0/agent-memory-mcp-0.18.0-darwin-amd64.tar.gz"
+      sha256 "11ce7731b9a7113895c1634b7b4aca3c76a93f8833a993b79d813517a9718086"
 
       define_method(:install) do
         bin.install "agent-memory-mcp"
@@ -44,8 +44,8 @@ class AgentMemoryMcp < Formula
       end
     end
     if Hardware::CPU.arm?
-      url "https://github.com/ipiton/agent-memory-mcp/releases/download/v0.17.0/agent-memory-mcp-0.17.0-darwin-arm64.tar.gz"
-      sha256 "7c90fbc2e13329062c3e2edadd120ab60c96c795edec2a9b08edce0c715130fd"
+      url "https://github.com/ipiton/agent-memory-mcp/releases/download/v0.18.0/agent-memory-mcp-0.18.0-darwin-arm64.tar.gz"
+      sha256 "e945be7fcbbfd6323bbeff89e9a92e36ab684d2876dfad0a2f58e3878939c244"
 
       define_method(:install) do
         bin.install "agent-memory-mcp"
@@ -81,8 +81,8 @@ class AgentMemoryMcp < Formula
 
   on_linux do
     if Hardware::CPU.intel? && Hardware::CPU.is_64_bit?
-      url "https://github.com/ipiton/agent-memory-mcp/releases/download/v0.17.0/agent-memory-mcp-0.17.0-linux-amd64.tar.gz"
-      sha256 "a5d0c048ab993b5363984b7838d20c465fa43c27de7e53486746a159e0b1a666"
+      url "https://github.com/ipiton/agent-memory-mcp/releases/download/v0.18.0/agent-memory-mcp-0.18.0-linux-amd64.tar.gz"
+      sha256 "acb0c45f2eee58f70a2adfad9351d659aefd560f3016c6f9f3be0cad87a0697d"
       define_method(:install) do
         bin.install "agent-memory-mcp"
         # T101: the service is launched through a wrapper so secrets can come
@@ -114,8 +114,8 @@ class AgentMemoryMcp < Formula
       end
     end
     if Hardware::CPU.arm? && Hardware::CPU.is_64_bit?
-      url "https://github.com/ipiton/agent-memory-mcp/releases/download/v0.17.0/agent-memory-mcp-0.17.0-linux-arm64.tar.gz"
-      sha256 "bf4ccddd6f19d0a19fefcdfea6b4766ae183a8f519de3d1eddc27e18e85dc274"
+      url "https://github.com/ipiton/agent-memory-mcp/releases/download/v0.18.0/agent-memory-mcp-0.18.0-linux-arm64.tar.gz"
+      sha256 "b093e1d9c62ead8fc001ab7c3764c02e5ff32fd42c0ce1b2c1769b7b09692ecb"
       define_method(:install) do
         bin.install "agent-memory-mcp"
         # T101: the service is launched through a wrapper so secrets can come
@@ -148,44 +148,40 @@ class AgentMemoryMcp < Formula
     end
   end
 
-  def post_install
-    (etc/"agent-memory-mcp").mkpath
-    config_file = etc/"agent-memory-mcp/config.env"
-    unless config_file.exist?
-      config_file.write <<~EOS
-        # agent-memory-mcp service configuration
-        # Edit this file and the service will auto-reload within ~30 seconds.
-        # Or send SIGHUP: kill -HUP $(pgrep agent-memory-mcp)
+  post_install_steps do
+    write_file "agent-memory-mcp/config.env", <<~EOS, base: :etc, overwrite: false
+      # agent-memory-mcp service configuration
+      # Edit this file and the service will auto-reload within ~30 seconds.
+      # Or send SIGHUP: kill -HUP $(pgrep agent-memory-mcp)
 
-        # HTTP daemon mode (required for brew services)
-        MCP_HTTP_MODE=http
-        MCP_HTTP_HOST=127.0.0.1
-        MCP_HTTP_PORT=18080
+      # HTTP daemon mode (required for brew services)
+      MCP_HTTP_MODE=http
+      MCP_HTTP_HOST=127.0.0.1
+      MCP_HTTP_PORT=18080
 
-        # Data storage
-        MCP_DATA_PATH=#{var}/agent-memory-mcp
-        MCP_MEMORY_DB_PATH=#{var}/agent-memory-mcp/memory-store/memories.db
-        MCP_RAG_INDEX_PATH=#{var}/agent-memory-mcp/rag-index
-        MCP_LOG_PATH=#{var}/log/agent-memory-mcp/mcp-diagnostics.log
+      # Data storage
+      MCP_DATA_PATH={{var}}/agent-memory-mcp
+      MCP_MEMORY_DB_PATH={{var}}/agent-memory-mcp/memory-store/memories.db
+      MCP_RAG_INDEX_PATH={{var}}/agent-memory-mcp/rag-index
+      MCP_LOG_PATH={{var}}/log/agent-memory-mcp/mcp-diagnostics.log
 
-        # Memory (enabled by default)
-        MCP_MEMORY_ENABLED=true
+      # Memory (enabled by default)
+      MCP_MEMORY_ENABLED=true
 
-        # RAG document search (disabled by default — enable after setting MCP_ROOT)
-        MCP_RAG_ENABLED=false
-        # MCP_ROOT=/path/to/your/project
-        # MCP_INDEX_DIRS=docs,README.md,CHANGELOG.md
+      # RAG document search (disabled by default — enable after setting MCP_ROOT)
+      MCP_RAG_ENABLED=false
+      # MCP_ROOT=/path/to/your/project
+      # MCP_INDEX_DIRS=docs,README.md,CHANGELOG.md
 
-        # Embeddings
-        MCP_EMBEDDING_MODE=auto
-        OLLAMA_BASE_URL=http://localhost:11434
-        # JINA_API_KEY=
-        # OPENAI_API_KEY=
-      EOS
-    end
-    (var/"agent-memory-mcp/memory-store").mkpath
-    (var/"agent-memory-mcp/rag-index").mkpath
-    (var/"log/agent-memory-mcp").mkpath
+      # Embeddings
+      MCP_EMBEDDING_MODE=auto
+      OLLAMA_BASE_URL=http://localhost:11434
+      # JINA_API_KEY=
+      # OPENAI_API_KEY=
+    EOS
+    mkdir_p "agent-memory-mcp/memory-store", base: :var
+    mkdir_p "agent-memory-mcp/rag-index", base: :var
+    mkdir_p "log/agent-memory-mcp", base: :var
   end
 
   def caveats
